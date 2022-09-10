@@ -1,0 +1,11 @@
+[package]
+name = "enough"
+version = "0.1.0"
+authors = ["Philipp Emanuel Weidmann <pew@worldwidemann.com>"]
+description = "A simple blogging system"
+repository = "https://github.com/p-e-w/enough"
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+edition = "2021"
+
+[dependencies]
