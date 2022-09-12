@@ -1,0 +1,87 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ title }}</title>
+
+    <link rel="icon" href="data:,">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sanitize.css@13.0.0/sanitize.css"
+        integrity="sha256-+TDNmUgHd7MxBBh2xvqREEA8YK2rBRbEeDc7Sjm3w04=" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sanitize.css@13.0.0/forms.css"
+        integrity="sha256-INHhazSANOKYTSFyBCFfc80nWtvOS3p6guarm4OJWws=" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sanitize.css@13.0.0/assets.css"
+        integrity="sha256-Kwja7pheYmSaev0MHGXTsDB090HQcXNIl3IORgDiRzo=" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sanitize.css@13.0.0/typography.css"
+        integrity="sha256-PbnASoCMrUoO/BQ6FjZFNFC9Wh+25gWs24azgH6aw+o=" crossorigin="anonymous">
+
+    <style>
+        body {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            border-bottom: 1px solid black;
+        }
+
+        menu {
+            margin: 0.5rem 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            font-size: 120%;
+        }
+
+        menu a {
+            display: block;
+            padding: 0.5rem 1rem;
+        }
+
+        footer {
+            border-top: 1px solid black;
+            padding: 1rem 0;
+            font-size: 80%;
+            text-align: right;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <menu>
+                <li><a href="{{ admin_url_prefix }}/posts">Posts</a></li>
+                <li><a href="{{ admin_url_prefix }}/pages">Pages</a></li>
+                <li><a href="{{ admin_url_prefix }}/files">Files</a></li>
+                <li><a href="{{ admin_url_prefix }}/header">Header</a></li>
+                <li><a href="{{ admin_url_prefix }}/footer">Footer</a></li>
+                <li><a href="{{ admin_url_prefix }}/css">CSS</a></li>
+                <li><a href="{{ admin_url_prefix }}/js">JS</a></li>
+                <li><a href="{{ admin_url_prefix }}/settings">Settings</a></li>
+                <li><a href="{{ admin_url_prefix }}/logout">Logout</a></li>
+            </menu>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <a href="https://github.com/p-e-w/enough">Enough</a> v0.1.0
+    </footer>
+</body>
+
+</html>
