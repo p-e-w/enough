@@ -3,12 +3,16 @@
 
 mod admin;
 
+use std::env;
+
 use askama::Template;
 use axum::{
     http::StatusCode,
     response::{Html, IntoResponse, Response},
-    Router, Server,
+    Extension, Router, Server,
 };
+use migration::{Migrator, MigratorTrait};
+use sea_orm::Database;
 
 const ADMIN_URL_PREFIX: &str = "/-";
 
@@ -34,7 +38,20 @@ where
 
 #[tokio::main]
 async fn main() {
-    let router = Router::new().nest(ADMIN_URL_PREFIX, admin::router());
+    let database_url =
+        env::var("DATABASE_URL").expect("required environment variable DATABASE_URL not set");
+
+    let database_connection = Database::connect(database_url)
+        .await
+        .expect("unable to connect to database");
+
+    Migrator::up(&database_connection, None)
+        .await
+        .expect("unable to apply database migrations");
+
+    let router = Router::new()
+        .nest(ADMIN_URL_PREFIX, admin::router())
+        .layer(Extension(database_connection));
 
     Server::bind(&"0.0.0.0:3000".parse().unwrap())
         .serve(router.into_make_service())

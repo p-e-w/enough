@@ -2,4 +2,19 @@
 
 {% block content %}
 <h2>Posts</h2>
+
+<table>
+    <tr>
+        <th style="width: 100%;">Title</th>
+        <th>Date</th>
+        <th>Published</th>
+    </tr>
+    {% for post in posts %}
+    <tr>
+        <td><a href="{{ admin_url_prefix }}/posts/{{ post.id }}">{{ post.title }}</a></td>
+        <td>{{ post.time.date() }}</td>
+        <td>{% if post.is_published %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}
