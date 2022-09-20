@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<form method="post">
+    <label>
+        <strong>Title</strong>
+        <input type="text" name="title" value="{{ post.title }}" required autofocus>
+    </label>
+
+    <label>
+        <strong>URL</strong>
+        <small>Letters, digits, and hyphens only. Leave blank to generate from title.</small>
+        <input type="text" name="url" value="{{ post.url }}" pattern="[a-zA-Z0-9-]*">
+    </label>
+
+    <label>
+        <strong>Date</strong>
+        <small>Leave blank to use current date.</small>
+        <input type="date" name="date" value="{{ post.time.date() }}">
+    </label>
+
+    <label>
+        <strong>Content</strong>
+        <small><a href="https://commonmark.org/">CommonMark</a> markdown. Raw HTML supported.</small>
+        <textarea name="content" rows="10">{{ post.content_markdown }}</textarea>
+    </label>
+
+    <input type="submit" value="Save">
+</form>
+{% endblock %}

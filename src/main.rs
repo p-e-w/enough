@@ -16,6 +16,8 @@ use sea_orm::Database;
 
 const ADMIN_URL_PREFIX: &str = "/-";
 
+type ErrorResponse = (StatusCode, &'static str);
+
 // From https://github.com/tokio-rs/axum/blob/1fe45583626a4c9c890cc01131d38c57f8728686/examples/templates/src/main.rs
 // TODO: Remove once `askama_axum` supports the latest axum version!
 struct HtmlTemplate<T>(T);
