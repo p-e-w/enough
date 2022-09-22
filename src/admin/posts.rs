@@ -2,8 +2,13 @@
 // Copyright (C) 2022  Philipp Emanuel Weidmann <pew@worldwidemann.com>
 
 use askama::Template;
-use axum::{extract::Path, http::StatusCode, response::IntoResponse, Extension, Form};
-use chrono::{NaiveDate, Utc};
+use axum::{
+    extract::Path,
+    http::StatusCode,
+    response::{IntoResponse, Redirect},
+    Extension, Form,
+};
+use chrono::{NaiveDate, NaiveDateTime, Utc};
 use entity::{page, prelude::Page};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, QueryOrder, Set,
@@ -61,16 +66,41 @@ struct PostTemplate<'a> {
     admin_url_prefix: &'a str,
     title: &'a str,
     post: page::Model,
+    is_new: bool,
 }
 
 pub(super) async fn get_post(
     Extension(ref database_connection): Extension<DatabaseConnection>,
-    Path(post_id): Path<i32>,
+    Path(post_id): Path<String>,
 ) -> Result<impl IntoResponse, ErrorResponse> {
+    let is_new = post_id == "new";
+
+    let post = if is_new {
+        page::Model {
+            id: 0,
+            time: NaiveDateTime::MIN,
+            title: String::new(),
+            url: String::new(),
+            content_markdown: String::new(),
+            content_html: String::new(),
+            is_post: true,
+            is_published: false,
+        }
+    } else {
+        post_by_id(
+            database_connection,
+            post_id
+                .parse()
+                .map_err(|_| (StatusCode::BAD_REQUEST, "invalid post ID"))?,
+        )
+        .await?
+    };
+
     Ok(HtmlTemplate(PostTemplate {
         admin_url_prefix: ADMIN_URL_PREFIX,
-        title: "Edit post",
-        post: post_by_id(database_connection, post_id).await?,
+        title: if is_new { "New post" } else { "Edit post" },
+        post,
+        is_new,
     }))
 }
 
@@ -84,10 +114,27 @@ pub(super) struct PostInput {
 
 pub(super) async fn post_post(
     Extension(ref database_connection): Extension<DatabaseConnection>,
-    Path(post_id): Path<i32>,
+    Path(post_id): Path<String>,
     Form(ref post_input): Form<PostInput>,
 ) -> Result<impl IntoResponse, ErrorResponse> {
-    let mut post: page::ActiveModel = post_by_id(database_connection, post_id).await?.into();
+    let is_new = post_id == "new";
+
+    let mut post = if is_new {
+        page::ActiveModel {
+            is_post: Set(true),
+            is_published: Set(false),
+            ..Default::default()
+        }
+    } else {
+        post_by_id(
+            database_connection,
+            post_id
+                .parse()
+                .map_err(|_| (StatusCode::BAD_REQUEST, "invalid post ID"))?,
+        )
+        .await?
+        .into()
+    };
 
     post.title = Set(post_input.title.clone());
 
@@ -115,15 +162,18 @@ pub(super) async fn post_post(
             .and_hms(12, 0, 0)
     });
 
-    // TODO: Generate HTML!
     post.content_markdown = Set(post_input.content.clone());
 
-    Ok(HtmlTemplate(PostTemplate {
-        admin_url_prefix: ADMIN_URL_PREFIX,
-        title: "Edit post",
-        post: post
-            .update(database_connection)
-            .await
-            .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "unable to save post"))?,
-    }))
+    // TODO: Generate HTML!
+    post.content_html = Set(String::new());
+
+    let post = if is_new {
+        post.insert(database_connection)
+    } else {
+        post.update(database_connection)
+    }
+    .await
+    .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "unable to save post"))?;
+
+    Ok(Redirect::to(&post.id.to_string()))
 }

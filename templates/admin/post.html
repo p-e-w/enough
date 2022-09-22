@@ -16,7 +16,7 @@
     <label>
         <strong>Date</strong>
         <small>Leave blank to use current date.</small>
-        <input type="date" name="date" value="{{ post.time.date() }}">
+        <input type="date" name="date" value="{% if !is_new %}{{ post.time.date() }}{% endif %}">
     </label>
 
     <label>
