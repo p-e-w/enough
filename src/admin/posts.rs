@@ -159,7 +159,8 @@ pub(super) async fn post_post(
                     "invalid date, must be in format YYYY-MM-DD",
                 )
             })?
-            .and_hms(12, 0, 0)
+            .and_hms_opt(12, 0, 0)
+            .unwrap()
     });
 
     post.content_markdown = Set(post_input.content.clone());
