@@ -10,6 +10,7 @@ repository = "https://github.com/p-e-w/enough"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
 edition = "2021"
+rust-version = "1.60"
 
 [dependencies]
 tokio = { version = "1.23.0", features = ["full"] }
