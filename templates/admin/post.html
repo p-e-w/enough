@@ -25,6 +25,21 @@
         <textarea name="content" rows="10">{{ post.content_markdown }}</textarea>
     </label>
 
-    <input type="submit" value="Save">
+    <button type="submit"
+        formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}">
+        Save
+    </button>
+
+    {% if post.is_published %}
+    <button type="submit"
+        formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}/unpublish">
+        Save and unpublish
+    </button>
+    {% else %}
+    <button type="submit"
+        formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}/publish">
+        Save and publish
+    </button>
+    {% endif %}
 </form>
 {% endblock %}

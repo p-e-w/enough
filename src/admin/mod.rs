@@ -3,14 +3,24 @@
 
 mod posts;
 
-use axum::{routing::get, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use regex::Regex;
 
 pub(super) fn router() -> Router {
-    Router::new().route("/posts", get(posts::get_posts)).route(
-        "/posts/:post_id",
-        get(posts::get_post).post(posts::post_post),
-    )
+    Router::new()
+        .route("/posts", get(posts::get_posts))
+        .route(
+            "/posts/:post_id",
+            get(posts::get_post).post(posts::post_save_post),
+        )
+        .route("/posts/:post_id/publish", post(posts::post_publish_post))
+        .route(
+            "/posts/:post_id/unpublish",
+            post(posts::post_unpublish_post),
+        )
 }
 
 fn is_valid_url(url: &str) -> bool {

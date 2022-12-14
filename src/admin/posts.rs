@@ -112,10 +112,11 @@ pub(super) struct PostInput {
     content: String,
 }
 
-pub(super) async fn post_post(
-    Extension(ref database_connection): Extension<DatabaseConnection>,
-    Path(post_id): Path<String>,
-    Form(ref post_input): Form<PostInput>,
+async fn save_post(
+    database_connection: &DatabaseConnection,
+    post_id: String,
+    post_input: &PostInput,
+    set_is_published: Option<bool>,
 ) -> Result<impl IntoResponse, ErrorResponse> {
     let is_new = post_id == "new";
 
@@ -168,6 +169,10 @@ pub(super) async fn post_post(
     // TODO: Generate HTML!
     post.content_html = Set(String::new());
 
+    if let Some(is_published) = set_is_published {
+        post.is_published = Set(is_published);
+    }
+
     let post = if is_new {
         post.insert(database_connection)
     } else {
@@ -176,5 +181,32 @@ pub(super) async fn post_post(
     .await
     .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "unable to save post"))?;
 
-    Ok(Redirect::to(&post.id.to_string()))
+    Ok(Redirect::to(&format!(
+        "{}/posts/{}",
+        ADMIN_URL_PREFIX, post.id,
+    )))
+}
+
+pub(super) async fn post_save_post(
+    Extension(ref database_connection): Extension<DatabaseConnection>,
+    Path(post_id): Path<String>,
+    Form(ref post_input): Form<PostInput>,
+) -> Result<impl IntoResponse, ErrorResponse> {
+    save_post(database_connection, post_id, post_input, None).await
+}
+
+pub(super) async fn post_publish_post(
+    Extension(ref database_connection): Extension<DatabaseConnection>,
+    Path(post_id): Path<String>,
+    Form(ref post_input): Form<PostInput>,
+) -> Result<impl IntoResponse, ErrorResponse> {
+    save_post(database_connection, post_id, post_input, Some(true)).await
+}
+
+pub(super) async fn post_unpublish_post(
+    Extension(ref database_connection): Extension<DatabaseConnection>,
+    Path(post_id): Path<String>,
+    Form(ref post_input): Form<PostInput>,
+) -> Result<impl IntoResponse, ErrorResponse> {
+    save_post(database_connection, post_id, post_input, Some(false)).await
 }
