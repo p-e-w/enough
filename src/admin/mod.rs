@@ -21,6 +21,10 @@ pub(super) fn router() -> Router {
             "/posts/:post_id/unpublish",
             post(posts::post_unpublish_post),
         )
+        .route(
+            "/posts/:post_id/delete",
+            get(posts::get_delete_post).post(posts::post_delete_post),
+        )
 }
 
 fn is_valid_url(url: &str) -> bool {

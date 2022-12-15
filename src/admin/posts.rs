@@ -11,7 +11,8 @@ use axum::{
 use chrono::{NaiveDate, NaiveDateTime, Utc};
 use entity::{page, prelude::Page};
 use sea_orm::{
-    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, QueryOrder, Set,
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, ModelTrait, QueryFilter,
+    QueryOrder, Set,
 };
 use serde::Deserialize;
 
@@ -209,4 +210,50 @@ pub(super) async fn post_unpublish_post(
     Form(ref post_input): Form<PostInput>,
 ) -> Result<impl IntoResponse, ErrorResponse> {
     save_post(database_connection, post_id, post_input, Some(false)).await
+}
+
+#[derive(Template)]
+#[template(path = "admin/delete_post.html")]
+struct DeletePostTemplate<'a> {
+    admin_url_prefix: &'a str,
+    title: &'a str,
+    post: page::Model,
+}
+
+pub(super) async fn get_delete_post(
+    Extension(ref database_connection): Extension<DatabaseConnection>,
+    Path(post_id): Path<String>,
+) -> Result<impl IntoResponse, ErrorResponse> {
+    let post = post_by_id(
+        database_connection,
+        post_id
+            .parse()
+            .map_err(|_| (StatusCode::BAD_REQUEST, "invalid post ID"))?,
+    )
+    .await?;
+
+    Ok(HtmlTemplate(DeletePostTemplate {
+        admin_url_prefix: ADMIN_URL_PREFIX,
+        title: "Delete post",
+        post,
+    }))
+}
+
+pub(super) async fn post_delete_post(
+    Extension(ref database_connection): Extension<DatabaseConnection>,
+    Path(post_id): Path<String>,
+) -> Result<impl IntoResponse, ErrorResponse> {
+    let post = post_by_id(
+        database_connection,
+        post_id
+            .parse()
+            .map_err(|_| (StatusCode::BAD_REQUEST, "invalid post ID"))?,
+    )
+    .await?;
+
+    post.delete(database_connection)
+        .await
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "unable to delete post"))?;
+
+    Ok(Redirect::to(&format!("{}/posts", ADMIN_URL_PREFIX)))
 }

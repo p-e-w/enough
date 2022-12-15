@@ -67,11 +67,20 @@
 
         .heading a {
             margin-top: 0.25rem;
+        }
+
+        a.create {
             color: green;
             font-weight: bold;
         }
 
-        h2 {
+        a.delete {
+            color: red;
+            font-weight: bold;
+        }
+
+        h2,
+        p:first-child {
             margin-top: 0;
         }
 
@@ -102,6 +111,37 @@
             width: 100%;
             background-color: lightyellow;
             border: 1px solid gray;
+        }
+
+        .actions {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .actions button {
+            margin-right: 0.5rem;
+        }
+
+        button {
+            padding: 0.25rem 0.75rem;
+            border: none;
+            color: white;
+            background-color: blue;
+            font-weight: bold;
+        }
+
+        button.create {
+            background-color: green;
+        }
+
+        button.unpublish {
+            background-color: chocolate;
+        }
+
+        button.delete {
+            background-color: red;
         }
 
     </style>

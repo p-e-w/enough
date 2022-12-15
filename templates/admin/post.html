@@ -25,21 +25,31 @@
         <textarea name="content" rows="10">{{ post.content_markdown }}</textarea>
     </label>
 
-    <button type="submit"
-        formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}">
-        Save
-    </button>
+    <div class="actions">
+        <div>
+            <button type="submit"
+                formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}">
+                Save
+            </button>
 
-    {% if post.is_published %}
-    <button type="submit"
-        formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}/unpublish">
-        Save and unpublish
-    </button>
-    {% else %}
-    <button type="submit"
-        formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}/publish">
-        Save and publish
-    </button>
-    {% endif %}
+            {% if post.is_published %}
+            <button type="submit"
+                formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}/unpublish"
+                class="unpublish">
+                Save and unpublish
+            </button>
+            {% else %}
+            <button type="submit"
+                formaction="{{ admin_url_prefix }}/posts/{% if is_new %}new{% else %}{{ post.id }}{% endif %}/publish"
+                class="create">
+                Save and publish
+            </button>
+            {% endif %}
+        </div>
+
+        {% if !is_new %}
+        <a href="{{ admin_url_prefix }}/posts/{{ post.id }}/delete" class="delete">Delete</a>
+        {% endif %}
+    </div>
 </form>
 {% endblock %}
