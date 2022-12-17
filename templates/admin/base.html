@@ -22,6 +22,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sanitize.css@13.0.0/typography.css"
         integrity="sha256-PbnASoCMrUoO/BQ6FjZFNFC9Wh+25gWs24azgH6aw+o=" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.10/lib/codemirror.css"
+        integrity="sha256-60lOqXLSZh74b39qxlbdZ4bXIeScnBtG4euWfktvm/M=" crossorigin="anonymous">
+
     <style>
         body {
             max-width: 1000px;
@@ -113,6 +116,32 @@
             border: 1px solid gray;
         }
 
+        textarea.code-editor,
+        .CodeMirror {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .CodeMirror {
+            background-color: lightyellow;
+            border: 1px solid gray;
+            resize: vertical;
+        }
+
+        .CodeMirror-lines {
+            padding: 0.25em 0;
+        }
+
+        .CodeMirror pre.CodeMirror-line,
+        .CodeMirror pre.CodeMirror-line-like {
+            padding: 0 0.375em;
+        }
+
+        :focus-visible,
+        .CodeMirror-focused {
+            outline: 2px solid Highlight;
+        }
+
         .actions {
             margin-top: 1.5rem;
             display: flex;
@@ -171,6 +200,36 @@
     <footer>
         <a href="https://github.com/p-e-w/enough">Enough</a> v0.1.0
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.10/lib/codemirror.js"
+        integrity="sha256-IheB6VTErpGC3yigKmhq9uGU2M3FCj0zC0/y+vAYdPA=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.10/mode/xml/xml.js"
+        integrity="sha256-3H5E1BA5kyb4AuKSRXPL9vlCp59kf9C5fwtgeXO8mgk=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.10/mode/javascript/javascript.js"
+        integrity="sha256-ExHHPGYwi6b3hRK0wudwppAMgMNiloN2MylmjuYREWM=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.10/mode/css/css.js"
+        integrity="sha256-YPBonlxq9/NsNB6OE0Gk8QtPCgTOv7c0G8vtuptXKzI=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.10/mode/htmlmixed/htmlmixed.js"
+        integrity="sha256-/lkS4dEPj+y5i9MeL5V8C7yav2tQXRG2280nVC0P3K0=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.10/mode/markdown/markdown.js"
+        integrity="sha256-j+exGEj3nMkRmyojnzigCUT28rt2SgC8g37PjTTPdpA=" crossorigin="anonymous"></script>
+
+    <script>
+        for (const codeEditorElement of document.querySelectorAll("textarea.code-editor")) {
+            const configuration = {};
+
+            if (codeEditorElement.classList.contains("language-markdown")) {
+                configuration.mode = "markdown";
+            }
+
+            CodeMirror.fromTextArea(codeEditorElement, configuration);
+        }
+    </script>
 </body>
 
 </html>
