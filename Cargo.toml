@@ -14,7 +14,7 @@ rust-version = "1.65"
 
 [dependencies]
 tokio = { version = "1.23.0", features = ["full"] }
-serde = { version = "1.0.147", features = ["derive"] }
+serde = { version = "1.0.151", features = ["derive"] }
 sea-orm = { version = "0.10.5", features = ["runtime-tokio-rustls", "sqlx-postgres", "sqlx-sqlite"] }
 axum = "0.6.1"
 askama = "0.11.1"
