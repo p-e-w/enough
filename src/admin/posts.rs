@@ -17,7 +17,7 @@ use sea_orm::{
 use serde::Deserialize;
 
 use crate::{
-    admin::{is_valid_url, title_to_url},
+    admin::{is_valid_url, markdown::markdown_to_html, title_to_url},
     ErrorResponse, HtmlTemplate, ADMIN_URL_PREFIX,
 };
 
@@ -167,8 +167,7 @@ async fn save_post(
 
     post.content_markdown = Set(post_input.content.clone());
 
-    // TODO: Generate HTML!
-    post.content_html = Set(String::new());
+    post.content_html = Set(markdown_to_html(&post_input.content));
 
     if let Some(is_published) = set_is_published {
         post.is_published = Set(is_published);
