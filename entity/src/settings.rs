@@ -3,21 +3,23 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(table_name = "page")]
+#[sea_orm(table_name = "settings")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub time: DateTime,
     #[sea_orm(column_type = "Text")]
-    pub title: String,
+    pub header_markdown: String,
     #[sea_orm(column_type = "Text")]
-    pub url: String,
+    pub header_html: String,
     #[sea_orm(column_type = "Text")]
-    pub content_markdown: String,
+    pub footer_markdown: String,
     #[sea_orm(column_type = "Text")]
-    pub content_html: String,
-    pub is_post: bool,
-    pub is_published: bool,
+    pub footer_html: String,
+    #[sea_orm(column_type = "Text")]
+    pub css: String,
+    #[sea_orm(column_type = "Text")]
+    pub javascript: String,
+    pub posts_per_page: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
