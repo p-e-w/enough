@@ -109,6 +109,7 @@
 
         input[type=text],
         input[type=date],
+        input[type=number],
         textarea {
             display: block;
             width: 100%;
@@ -186,7 +187,7 @@
                 <li><a href="{{ admin_url_prefix }}/header">Header</a></li>
                 <li><a href="{{ admin_url_prefix }}/footer">Footer</a></li>
                 <li><a href="{{ admin_url_prefix }}/css">CSS</a></li>
-                <li><a href="{{ admin_url_prefix }}/js">JS</a></li>
+                <li><a href="{{ admin_url_prefix }}/javascript">JS</a></li>
                 <li><a href="{{ admin_url_prefix }}/settings">Settings</a></li>
                 <li><a href="{{ admin_url_prefix }}/logout">Logout</a></li>
             </menu>
@@ -225,6 +226,10 @@
 
             if (codeEditorElement.classList.contains("language-markdown")) {
                 configuration.mode = "markdown";
+            } else if (codeEditorElement.classList.contains("language-css")) {
+                configuration.mode = "css";
+            } else if (codeEditorElement.classList.contains("language-javascript")) {
+                configuration.mode = "javascript";
             }
 
             CodeMirror.fromTextArea(codeEditorElement, configuration);

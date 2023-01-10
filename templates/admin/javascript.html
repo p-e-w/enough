@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<form method="post">
+    <label>
+        <strong>JavaScript</strong>
+        <small>Injected at the end of the <code>&lt;body&gt;</code> of each page.</small>
+        <textarea name="javascript" rows="10" class="code-editor language-javascript"
+            autofocus>{{ javascript }}</textarea>
+    </label>
+
+    <div class="actions">
+        <button type="submit">Save</button>
+    </div>
+</form>
+{% endblock %}

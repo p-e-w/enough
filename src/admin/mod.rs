@@ -3,6 +3,7 @@
 
 mod markdown;
 mod posts;
+mod settings;
 
 use axum::{
     routing::{get, post},
@@ -25,6 +26,23 @@ pub(super) fn router() -> Router {
         .route(
             "/posts/:post_id/delete",
             get(posts::get_delete_post).post(posts::post_delete_post),
+        )
+        .route(
+            "/header",
+            get(settings::get_header).post(settings::post_header),
+        )
+        .route(
+            "/footer",
+            get(settings::get_footer).post(settings::post_footer),
+        )
+        .route("/css", get(settings::get_css).post(settings::post_css))
+        .route(
+            "/javascript",
+            get(settings::get_javascript).post(settings::post_javascript),
+        )
+        .route(
+            "/settings",
+            get(settings::get_settings).post(settings::post_settings),
         )
 }
 

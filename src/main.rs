@@ -11,8 +11,9 @@ use axum::{
     response::{Html, IntoResponse, Response},
     Extension, Router, Server,
 };
+use entity::{prelude::Settings, settings};
 use migration::{Migrator, MigratorTrait};
-use sea_orm::Database;
+use sea_orm::{Database, DatabaseConnection, EntityTrait};
 
 const ADMIN_URL_PREFIX: &str = "/-";
 
@@ -36,6 +37,22 @@ where
                 .into_response(),
         }
     }
+}
+
+async fn settings(connection: &DatabaseConnection) -> Result<settings::Model, ErrorResponse> {
+    Settings::find()
+        .one(connection)
+        .await
+        .map_err(|_| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "unable to retrieve settings",
+            )
+        })?
+        .ok_or((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "settings not found; this means the database is corrupt",
+        ))
 }
 
 #[tokio::main]

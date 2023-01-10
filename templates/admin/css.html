@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<form method="post">
+    <label>
+        <strong>CSS</strong>
+        <small>Injected into the <code>&lt;head&gt;</code> of each page.</small>
+        <textarea name="css" rows="10" class="code-editor language-css" autofocus>{{ css }}</textarea>
+    </label>
+
+    <div class="actions">
+        <button type="submit">Save</button>
+    </div>
+</form>
+{% endblock %}

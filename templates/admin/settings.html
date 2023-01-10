@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<form method="post">
+    <label>
+        <strong>Posts per page</strong>
+        <input type="number" name="posts_per_page" value="{{ settings.posts_per_page }}" min="1" required autofocus>
+    </label>
+
+    <div class="actions">
+        <button type="submit">Save</button>
+    </div>
+</form>
+{% endblock %}

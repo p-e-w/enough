@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<form method="post">
+    <label>
+        <strong>Footer</strong>
+        <small><a href="https://commonmark.org/">CommonMark</a> Markdown. Raw HTML supported.</small>
+        <textarea name="footer" rows="10" class="code-editor language-markdown" autofocus>{{ footer }}</textarea>
+    </label>
+
+    <div class="actions">
+        <button type="submit">Save</button>
+    </div>
+</form>
+{% endblock %}
