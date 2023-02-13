@@ -6,4 +6,4 @@ rust-version = "1.65"
 publish = false
 
 [dependencies]
-sea-orm = "0.10.5"
+sea-orm = "0.11.0"
